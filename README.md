@@ -19,6 +19,17 @@ OPTIONAL FLAGS:
   -s server_address         Use alternative pastebin server address
 ```
 
+### Install
+
+`sudo make install`
+
+_Note: On systems without admin access the binary can be run directly from the
+git repo, but will lack `man` support and command completion._
+
+### Uninstall
+
+`sudo make uninstall`
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to

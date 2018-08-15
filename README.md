@@ -3,17 +3,28 @@ pb ![calver](https://img.shields.io/badge/calver-2018.08.14-22bfda.svg?style=fla
 
 **pb** is a helper utility for using 0x0 pastebin services
 
+pb  provides  an  easy-to-use  interface  for  uploading images or piping output to a 0x0
+pastebin service. While it comes pre-configured with a  specific  pastebin,  the  service
+endpoint can be overridden.
+
 ## Usage
 
 ```bash
-pb [options] filename
-or
-(command-with-stdout) | pb
+pb scores.txt
+       Upload 'scores.txt' to the pastebin
 
-Uploads a file or data to the tilde 0x0 paste bin
+echo 'Secret info' | pb
+       Upload piped output to the pastebin
 
-OPTIONAL FLAGS:
-  -h                        Show this help
+find . -type f -name '*.js' -print | pb -f
+       Upload a list of files to the pastebin individually pb -s http://0x0.st scores.txt
+       Upload a file to a different pastebin endpoint
+```
+
+### Options
+
+```bash
+  -h                        Show help
   -v                        Show current version number
   -f                        Explicitly interpret stdin as filename
   -s server_address         Use alternative pastebin server address

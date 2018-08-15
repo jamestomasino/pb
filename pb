@@ -108,7 +108,8 @@ fi
 
 if [ ${flag_shortlist} -gt 0 ]; then
   out="-f -v -h -s"
-  die "${out}" 0
+  lsresults="$(ls)"
+  die "${out} ${lsresults}" 0
 fi
 
 if [ ${flag_file} -gt 0 ]; then

@@ -76,7 +76,6 @@ while true; do
       shift
       ENDPOINT="$2"
       shift
-      break
       ;;
     -x)
       flag_shortlist=1

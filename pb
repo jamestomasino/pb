@@ -2,10 +2,11 @@
 
 version="v.2018.08.14"
 ENDPOINT="https://0x0.tilde.team"
-flag_options="hvfs::"
+flag_options="hvfs::x"
 flag_version=0
 flag_help=0
 flag_file=0
+flag_shortlist=0
 data=""
 
 SUCCESS=$(tput setaf 190)
@@ -77,6 +78,10 @@ while true; do
       shift
       break
       ;;
+    -x)
+      flag_shortlist=1
+      shift
+      ;;
     --)
       shift
       break
@@ -100,6 +105,11 @@ fi
 if [ ${flag_help} -gt 0 ]; then
   show_help
   die "" 0
+fi
+
+if [ ${flag_shortlist} -gt 0 ]; then
+  out="-f -v -h -s"
+  die "${out}" 0
 fi
 
 if [ ${flag_file} -gt 0 ]; then

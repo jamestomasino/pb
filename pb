@@ -43,7 +43,11 @@ die () {
     if [ "${code}" -eq 0 ]; then
       printf "%s\\n" "${msg}"
     else
-      printf "%s%s%s\\n" "$ERROR" "${msg}" "$RESET" >&2
+      if [ ${flag_colors} -gt 0 ]; then
+        printf "%s%s%s\\n" "$ERROR" "${msg}" "$RESET" >&2
+      else
+        printf "%s\\n" "${msg}" >&2
+      fi
     fi
   fi
   exit "${code}"
@@ -139,12 +143,12 @@ if [ ${flag_file} -gt 0 ]; then
       fi
       if [ ${flag_colors} -gt 0 ]; then
         printf "%s%s\\t%s" "$RESET" "${f}" "$SUCCESS"
-      else
-        printf "%s\\t" "${f}"
       fi
       if [ -f "${f}" ]; then
         curl -F"file=@${f}" "${ENDPOINT}"
-        printf "%s" "$RESET"
+        if [ ${flag_colors} -gt 0 ]; then
+          printf "%s" "$RESET"
+        fi
       else
         if [ ${flag_colors} -gt 0 ]; then
           printf "%sFile not found.%s\\n" "$ERROR" "$RESET"

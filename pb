@@ -62,24 +62,19 @@ while true; do
   case "$1" in
     -h)
       flag_help=1
-      shift
       ;;
     -v)
       flag_version=1
-      shift
       ;;
     -f)
       flag_file=1
-      shift
       ;;
     -s)
       shift
       ENDPOINT="$1"
-      shift
       ;;
     -x)
       flag_shortlist=1
-      shift
       ;;
     --)
       shift
@@ -89,12 +84,12 @@ while true; do
       die "Internal error: $1" 3
       ;;
   esac
+  shift
 done
 
 if [ -z "$data" ]; then
   data="$*"
 fi
-
 
 if [ ${flag_version} -gt 0 ]; then
   printf "%s\\n" "${version}"

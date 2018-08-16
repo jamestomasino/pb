@@ -2,11 +2,12 @@
 
 version="v.2018.08.14"
 ENDPOINT="https://0x0.tilde.team"
-flag_options="hvfs::x"
+flag_options="hvcfs::x"
 flag_version=0
 flag_help=0
 flag_file=0
 flag_shortlist=0
+flag_colors=0
 data=""
 
 SUCCESS=$(tput setaf 190)
@@ -25,6 +26,7 @@ OPTIONAL FLAGS:
   -h                        Show this help
   -v                        Show current version number
   -f                        Explicitly interpret stdin as filename
+  -c                        Pretty color output
   -s server_address         Use alternative pastebin server address
 END
 }
@@ -68,6 +70,10 @@ while true; do
       flag_version=1
       shift
       ;;
+    -c)
+      flag_colors=1
+      shift
+      ;;
     -f)
       flag_file=1
       shift
@@ -95,7 +101,6 @@ if [ -z "$data" ]; then
   data="$*"
 fi
 
-
 if [ ${flag_version} -gt 0 ]; then
   printf "%s\\n" "${version}"
   die "" 0
@@ -114,9 +119,17 @@ fi
 
 if [ ${flag_file} -gt 0 ]; then
   if [ -z "${data}" ]; then
-    printf "%sProvide data to upload%s\\n" "$ERROR" "$RESET"
+    if [ ${flag_colors} -gt 0 ]; then
+      printf "%sProvide data to upload%s\\n" "$ERROR" "$RESET"
+    else
+      printf "Provide data to upload\\n"
+    fi
   elif [ ! -f "${data}" ]; then
-    printf "%s%s%s\\tFile not found.%s\\n" "$RESET" "${data}" "$ERROR" "$RESET"
+    if [ ${flag_colors} -gt 0 ]; then
+      printf "%s%s%s\\tFile not found.%s\\n" "$RESET" "${data}" "$ERROR" "$RESET"
+    else
+      printf "%s\\tFile not found.\\n" "${data}"
+    fi
     # attempt to split data and upload each string as file
     for f in ${data}
     do
@@ -124,26 +137,46 @@ if [ ${flag_file} -gt 0 ]; then
       if [ "$f" = "$data" ]; then
         break;
       fi
-      printf "%s${f}\\t%s" "$RESET" "$SUCCESS"
+      if [ ${flag_colors} -gt 0 ]; then
+        printf "%s%s\\t%s" "$RESET" "${f}" "$SUCCESS"
+      else
+        printf "%s\\t" "${f}"
+      fi
       if [ -f "${f}" ]; then
         curl -F"file=@${f}" "${ENDPOINT}"
         printf "%s" "$RESET"
       else
-        printf "%sFile not found.%s\\n" "$ERROR" "$RESET"
+        if [ ${flag_colors} -gt 0 ]; then
+          printf "%sFile not found.%s\\n" "$ERROR" "$RESET"
+        else
+          printf "File not found.\\n"
+        fi
       fi
     done
   else
-    printf "%s${data}\\t%s" "$RESET" "$SUCCESS"
-    curl -F"file=@${data}" "${ENDPOINT}"
-    printf "%s" "$RESET"
+    if [ ${flag_colors} -gt 0 ]; then
+      printf "%s${data}\\t%s" "$RESET" "$SUCCESS"
+      curl -F"file=@${data}" "${ENDPOINT}"
+      printf "%s" "$RESET"
+    else
+      curl -F"file=@${data}" "${ENDPOINT}"
+    fi
   fi
 else
   if [ -z "${data}" ]; then
-    printf "%sNo data found for upload. Please try again.%s\\n" "$ERROR" "$RESET"
+    if [ ${flag_colors} -gt 0 ]; then
+      printf "%sNo data found for upload. Please try again.%s\\n" "$ERROR" "$RESET"
+    else
+      printf "No data found for upload. Please try again.\\n"
+    fi
   else
-    printf "%s" "$SUCCESS"
-    printf "%s" "${data}" | curl -F"file=@-;filename=null.txt" "${ENDPOINT}"
-    printf "%s" "$RESET"
+    if [ ${flag_colors} -gt 0 ]; then
+      printf "%s" "$SUCCESS"
+      printf "%s" "${data}" | curl -F"file=@-;filename=null.txt" "${ENDPOINT}"
+      printf "%s" "$RESET"
+    else
+      printf "%s" "${data}" | curl -F"file=@-;filename=null.txt" "${ENDPOINT}"
+    fi
   fi
 fi
 

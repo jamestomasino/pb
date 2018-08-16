@@ -23,7 +23,7 @@ install:
 	@cp -f pb $(BINDIR)/pb
 	@chmod 755 $(BINDIR)/pb
 	@echo Installing the manual page to $(MANDIR)/man1
-	@mkdir -p $(MANDIR)
+	@mkdir -p $(MANDIR)/man1
 	@cp -f pb.1 $(MANDIR)/man1/pb.1
 	@chmod 644 $(MANDIR)/man1/pb.1
 ifdef CPLDIR

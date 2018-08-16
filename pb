@@ -74,7 +74,7 @@ while true; do
       ;;
     -s)
       shift
-      ENDPOINT="$2"
+      ENDPOINT="$1"
       shift
       ;;
     -x)

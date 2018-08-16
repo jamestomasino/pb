@@ -38,6 +38,7 @@ Upload a file to a different pastebin endpoint
 ```bash
   -f                        Explicitly interpret stdin as filename
   -s server_address         Use alternative pastebin server address
+  -c                        Pretty color output
   -v                        Show current version number
   -h                        Show help
 ```

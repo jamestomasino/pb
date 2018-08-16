@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="v.2018.08.14"
+version="v.2018.08.15"
 ENDPOINT="https://0x0.tilde.team"
 flag_options="hvcfs::x"
 flag_version=0

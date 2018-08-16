@@ -116,7 +116,7 @@ if [ ${flag_help} -gt 0 ]; then
 fi
 
 if [ ${flag_shortlist} -gt 0 ]; then
-  out="-f -v -h -s"
+  out="-f -v -h -s -c"
   lsresults="$(ls)"
   die "${out} ${lsresults}" 0
 fi

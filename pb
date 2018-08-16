@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="v.2018.08.15"
+version="v.2018.08.16"
 ENDPOINT="https://ttm.sh"
 flag_options="hvcfs::x"
 flag_version=0

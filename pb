@@ -74,7 +74,6 @@ while true; do
       ;;
     -c)
       flag_colors=1
-      shift
       ;;
     -f)
       flag_file=1

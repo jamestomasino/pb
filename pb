@@ -1,7 +1,7 @@
 #!/bin/sh
 
 version="v.2018.08.15"
-ENDPOINT="https://0x0.tilde.team"
+ENDPOINT="https://ttm.sh"
 flag_options="hvcfs::x"
 flag_version=0
 flag_help=0

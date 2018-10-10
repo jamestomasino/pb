@@ -1,16 +1,45 @@
 .TH PB 1 "16 August 2018" "v2018.08.16"
+
 .SH NAME
 pb \- a helper utility for using 0x0 pastebin services
+
 .SH SYNOPSIS
-.B pb [options] (filename)
+.B pb [-fucvh] [-s server_endpoint]
 .P
+
 .SH DESRIPTION
 .B pb
 provides an easy-to-use interface for uploading images
 or piping output to a 0x0 pastebin service. While it
 comes pre-configured with a specific pastebin, the
 service endpoint can be overridden.
-.SH USAGE
+
+Data input can be provided as an argument or via stdin.
+The data will be processed as an image, text or URL to
+be shortened based on the context.
+
+The options are as follows:
+
+.TP
+.B -f
+Explicitly interpret stdin as filename or names.
+.TP
+.B -s
+Use alternative pastebin server address.
+.TP
+.B -u
+Shorten a URL.
+.TP
+.B -c
+Pretty color output.
+.TP
+.B -v
+Display current version information.
+.TP 
+.B -h
+Show the help.
+
+.SH EXAMPLES
 .TP
 .B pb scores.txt
 Upload 'scores.txt' to the pastebin
@@ -22,28 +51,13 @@ Upload piped output to the pastebin
 Upload a list of files to the pastebin individually
 .B pb -s http://0x0.st scores.txt
 Upload a file to a different pastebin endpoint
-.SH DEPENDENCIES
-None.
-.SH OPTIONS
 .TP
-.B -f
-Explicitly interpret stdin as filename or names
-.TP
-.B -s <server_address>
-Use alternative pastebin server address
-.TP
-.B -u
-Shorten a URL provided as an argument or passed via stdin
-.TP
-.B -c
-Pretty color output
-.TP
-.B -v
-Display current version information.
-.TP 
-.B -h
-Show the help.
+.B pb -u 'https://tilde.team'
+Shorten the URL to tilde.team
+
 .SH BUGS
-None known.
+Report issues at the git repository at
+.B https://tildegit.org/tomasino/pb
+
 .SH AUTHOR
 James Tomasino <tomasino (at) lavabit (dot) com>

@@ -1,4 +1,4 @@
-pb ![calver](https://img.shields.io/badge/calver-2018.08.16-22bfda.svg?style=flat-square) ![status](https://img.shields.io/badge/status-working-green.svg?style=flat-square) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
+pb ![calver](https://img.shields.io/badge/calver-2018.10.09-22bfda.svg?style=flat-square) ![status](https://img.shields.io/badge/status-working-green.svg?style=flat-square) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
 ------
 
 **pb** is a helper utility for using 0x0 pastebin services
@@ -33,14 +33,21 @@ pb -s http://0x0.st scores.txt
 
 Upload a file to a different pastebin endpoint
 
+```bash
+pb -u https://google.com
+```
+
+Shorten a URL
+
 ### Options
 
 ```bash
-  -f                        Explicitly interpret stdin as filename
-  -s server_address         Use alternative pastebin server address
-  -c                        Pretty color output
+  -h                        Show this help
   -v                        Show current version number
-  -h                        Show help
+  -f                        Explicitly interpret stdin as filename
+  -c                        Pretty color output
+  -u                        Shorten URL
+  -s server_address         Use alternative pastebin server address
 ```
 
 ### Install

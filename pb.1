@@ -24,7 +24,7 @@ The options are as follows:
 .B -f
 Explicitly interpret stdin as filename or names.
 .TP
-.B -s
+.BI -s " server_address"
 Use alternative pastebin server address.
 .TP
 .B -u
@@ -38,6 +38,11 @@ Display current version information.
 .TP 
 .B -h
 Show the help.
+
+.SH EXIT STATUS
+The
+.B pb
+utility exits 0 on success, and >0 if an error occurs.
 
 .SH EXAMPLES
 .TP
@@ -58,6 +63,12 @@ Shorten the URL to tilde.team
 .SH BUGS
 Report issues at the git repository at
 .B https://tildegit.org/tomasino/pb
+
+.SH STANDARDS
+The
+.B pb
+utility is compliant with the IEEE Std 1003.1-2008 ("POSIX.1")
+specification.
 
 .SH AUTHOR
 James Tomasino <tomasino (at) lavabit (dot) com>

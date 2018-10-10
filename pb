@@ -1,19 +1,23 @@
 #!/bin/sh
 
-version="v.2018.08.16"
+# init variables
+version="v.2018.10.09"
 ENDPOINT="https://ttm.sh"
-flag_options="hvcfs::x"
+flag_options="hvcufs::x"
 flag_version=0
 flag_help=0
 flag_file=0
+flag_url=0
 flag_shortlist=0
 flag_colors=0
 data=""
 
+# Colors
 SUCCESS=$(tput setaf 190)
 ERROR=$(tput setaf 196)
 RESET=$(tput sgr0)
 
+# help message available via func
 show_help() {
   cat > /dev/stdout << END
 pb [options] filename
@@ -27,10 +31,12 @@ OPTIONAL FLAGS:
   -v                        Show current version number
   -f                        Explicitly interpret stdin as filename
   -c                        Pretty color output
+  -u                        Shorten URL
   -s server_address         Use alternative pastebin server address
 END
 }
 
+# helper for program exit, supports error codes and messages
 die () {
   msg="$1"
   code="$2"
@@ -60,9 +66,12 @@ else
   data="$(cat < /dev/stdin )"
 fi
 
+# attempt to parse options or die
 if ! parsed=$(getopt ${flag_options} "$@"); then
   die "Invalid input" 2
 fi
+
+# handle options
 eval set -- "${parsed}"
 while true; do
   case "$1" in
@@ -82,6 +91,9 @@ while true; do
       shift
       ENDPOINT="$1"
       ;;
+    -u)
+      flag_url=1
+      ;;
     -x)
       flag_shortlist=1
       ;;
@@ -96,55 +108,99 @@ while true; do
   shift
 done
 
+# if data variable is empty (not a pipe) use params as fallback
 if [ -z "$data" ]; then
   data="$*"
 fi
 
+# display current version
 if [ ${flag_version} -gt 0 ]; then
   printf "%s\\n" "${version}"
   die "" 0
 fi
 
+# display help
 if [ ${flag_help} -gt 0 ]; then
   show_help
   die "" 0
 fi
 
+# shortlist used for bash command completion
 if [ ${flag_shortlist} -gt 0 ]; then
-  out="-f -v -h -s -c"
+  out="-f -v -h -s -c -u"
   lsresults="$(ls)"
   die "${out} ${lsresults}" 0
 fi
 
-if [ ${flag_file} -gt 0 ]; then
+# URL shortening reference
+
+# If URL mode detected, process URL shortener and end processing without
+# checking for a file to upload to the pastebin
+if [ ${flag_url} -gt 0 ]; then
+
   if [ -z "${data}" ]; then
+    # if no data
+
+    # print error message
+    if [ ${flag_colors} -gt 0 ]; then
+      printf "%sProvide URL to shorten%s\\n" "$ERROR" "$RESET"
+    else
+      printf "Provide URL to shorten\\n"
+    fi
+  else
+
+    # shorten URL and print results
+    curl -F"shorten=${data}" "${ENDPOINT}"
+  fi
+  die "" 0
+fi
+
+if [ ${flag_file} -gt 0 ]; then
+  # file mode
+
+  if [ -z "${data}" ]; then
+    # if no data
+
+    # print error message
     if [ ${flag_colors} -gt 0 ]; then
       printf "%sProvide data to upload%s\\n" "$ERROR" "$RESET"
     else
       printf "Provide data to upload\\n"
     fi
+
   elif [ ! -f "${data}" ]; then
+    # file not found with name provided
+
+    # print error messagse
     if [ ${flag_colors} -gt 0 ]; then
       printf "%s%s%s\\tFile not found.%s\\n" "$RESET" "${data}" "$ERROR" "$RESET"
     else
       printf "%s\\tFile not found.\\n" "${data}"
     fi
-    # attempt to split data and upload each string as file
-    for f in ${data}
-    do
+
+    # attempt to split data string (multi-line?) and upload each string as file
+    for f in ${data}; do
       # if there's nothing to parse, skip this loop
       if [ "$f" = "$data" ]; then
         break;
       fi
+
+      # print name of file parsed, but not yet status of success or failure
       if [ ${flag_colors} -gt 0 ]; then
         printf "%s%s\\t%s" "$RESET" "${f}" "$SUCCESS"
       fi
+
+      # check if file exists
       if [ -f "${f}" ]; then
+        # send file to endpoint
         curl -F"file=@${f}" "${ENDPOINT}"
+
+        # print result short url
         if [ ${flag_colors} -gt 0 ]; then
           printf "%s" "$RESET"
         fi
       else
+        # print error message
         if [ ${flag_colors} -gt 0 ]; then
           printf "%sFile not found.%s\\n" "$ERROR" "$RESET"
         else
@@ -153,6 +209,9 @@ if [ ${flag_file} -gt 0 ]; then
       fi
     done
   else
+    # data available in file
+
+    # send file to endpoint
     if [ ${flag_colors} -gt 0 ]; then
       printf "%s${data}\\t%s" "$RESET" "$SUCCESS"
       curl -F"file=@${data}" "${ENDPOINT}"
@@ -162,13 +221,22 @@ if [ ${flag_file} -gt 0 ]; then
     fi
   fi
 else
+  # non-file mode
+
   if [ -z "${data}" ]; then
+    # if no data
+
+    # print error message
     if [ ${flag_colors} -gt 0 ]; then
       printf "%sNo data found for upload. Please try again.%s\\n" "$ERROR" "$RESET"
     else
       printf "No data found for upload. Please try again.\\n"
     fi
+
   else
+    # data available
+
+    # send data to endpoint, print short url
     if [ ${flag_colors} -gt 0 ]; then
       printf "%s" "$SUCCESS"
       printf "%s" "${data}" | curl -F"file=@-;filename=null.txt" "${ENDPOINT}"

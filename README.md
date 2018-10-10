@@ -9,35 +9,35 @@ endpoint can be overridden.
 
 ## Usage Examples
 
-```bash
-pb scores.txt
-```
-
 Upload 'scores.txt' to the pastebin
 
 ```bash
-echo 'Secret info' | pb
+pb scores.txt
 ```
 
 Upload piped output to the pastebin
 
 ```bash
-find . -type f -name '*.js' -print | pb -f
+echo 'Secret info' | pb
 ```
 
 Upload a list of javascript files to the pastebin individually
 
 ```bash
-pb -s http://0x0.st scores.txt
+find . -type f -name '*.js' -print | pb -f
 ```
 
 Upload a file to a different pastebin endpoint
 
 ```bash
-pb -u https://google.com
+pb -s http://0x0.st scores.txt
 ```
 
 Shorten a URL
+
+```bash
+pb -u https://google.com
+```
 
 ### Options
 

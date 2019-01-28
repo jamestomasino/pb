@@ -45,7 +45,7 @@ die () {
     code=1
   fi
   # output message to stdout or stderr based on code
-  if [ ! -z "${msg}" ]; then
+  if [ -n "${msg}" ]; then
     if [ "${code}" -eq 0 ]; then
       printf "%s\\n" "${msg}"
     else

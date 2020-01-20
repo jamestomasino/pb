@@ -44,11 +44,7 @@ die () {
     if [ "${code}" -eq 0 ]; then
       printf "%s\\n" "${msg}"
     else
-      if [ ${flag_colors} -gt 0 ]; then
-        printf "%s%s%s\\n" "$ERROR" "${msg}" "$RESET" >&2
-      else
-        printf "%s\\n" "${msg}" >&2
-      fi
+      printf "%s%s%s\\n" "$ERROR" "${msg}" "$RESET" >&2
     fi
   fi
   exit "${code}"
@@ -151,7 +147,8 @@ if [ ${flag_url} -gt 0 ]; then
     printf "%sProvide URL to shorten%s\\n" "$ERROR" "$RESET"
   else
     # shorten URL and print results
-    curl -F"shorten=${data}" "${ENDPOINT}"
+    result=$(curl -sF"shorten=${data}" "${ENDPOINT}")
+    printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
   fi
   die "" 0
 fi
@@ -172,18 +169,11 @@ if [ ${flag_file} -gt 0 ]; then
       if [ "$f" = "$data" ]; then
         break;
       fi
-      # print name of file parsed, but not yet status of success or failure
-      if [ ${flag_colors} -gt 0 ]; then
-        printf "%s%s\\t%s" "$RESET" "${f}" "$SUCCESS"
-      fi
       # check if file exists
       if [ -f "${f}" ]; then
         # send file to endpoint
-        curl -F"file=@${f}" "${ENDPOINT}"
-        # print result short url
-        if [ ${flag_colors} -gt 0 ]; then
-          printf "%s" "$RESET"
-        fi
+        result=$(curl -sF"file=@${f}" "${ENDPOINT}")
+        printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
       else
         # print error message
         printf "%sFile not found.%s\\n" "$ERROR" "$RESET"
@@ -192,7 +182,8 @@ if [ ${flag_file} -gt 0 ]; then
   else
     # data available in file
     # send file to endpoint
-    curl -F"file=@${data}" "${ENDPOINT}"
+    result=$(curl -sF"file=@${data}" "${ENDPOINT}")
+    printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
   fi
 else
   # non-file mode
@@ -203,6 +194,7 @@ else
   else
     # data available
     # send data to endpoint, print short url
-    printf "%s" "${data}" | curl -F"file=@-;filename=null.txt" "${ENDPOINT}"
+    result=$(printf "%s" "${data}" | curl -sF"file=@-;filename=null.txt" "${ENDPOINT}")
+    printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
   fi
 fi

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # init variables
-version="v.2020.01.20"
+version="v2020.01.20"
 ENDPOINT="https://ttm.sh"
 flag_options="hvcufs::x"
 flag_version=0

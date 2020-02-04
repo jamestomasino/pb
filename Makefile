@@ -19,13 +19,9 @@ endif
 
 install:
 	@echo Installing the executable to $(BINDIR)
-	@mkdir -p $(BINDIR)
-	@cp -f pb $(BINDIR)/pb
-	@chmod 755 $(BINDIR)/pb
+	@install -D -m 0755 pb $(BINDIR)/pb
 	@echo Installing the manual page to $(MANDIR)/man1
-	@mkdir -p $(MANDIR)/man1
-	@cp -f pb.1 $(MANDIR)/man1/pb.1
-	@chmod 644 $(MANDIR)/man1/pb.1
+	@install -D -m 0644 pb.1 $(MANDIR)/man1/pb.1
 ifeq ($(CPLDIR),)
 	@echo Installing the command completion to $(CPLDIR)
 	@mkdir -p $(CPLDIR)

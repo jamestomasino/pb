@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # init variables
-version="v2020.01.20"
+version="v2020.06.10"
 ENDPOINT="https://ttm.sh"
-flag_options="hvcufs::x"
+flag_options=":hvcufs::x"
 flag_version=0
 flag_help=0
 flag_file=0
@@ -28,6 +28,12 @@ OPTIONAL FLAGS:
   -c                        Pretty color output
   -u                        Shorten URL
   -s server_address         Use alternative pastebin server address
+END
+}
+
+show_usage() {
+  cat > /dev/stdout << END
+usage: pb [-hfvcux] [-s server_address] filename
 END
 }
 
@@ -59,14 +65,16 @@ fi
 
 # attempt to parse options or die
 if ! parsed=$(getopt ${flag_options} "$@"); then
-  die "Invalid input" 2
+  printf "pb: unknown option\\n"
+  show_usage
+  exit 2
 fi
 
 # handle options
 eval set -- "${parsed}"
 while true; do
   case "$1" in
-    -h)
+    -h|?)
       flag_help=1
       ;;
     -v)

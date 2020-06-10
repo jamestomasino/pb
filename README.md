@@ -52,10 +52,19 @@ pb -u https://google.com
 
 ### Install
 
+On GNU systems:
+
 `sudo make install`
 
 _Note: On systems without admin access the binary can be run directly from the
 git repo, but will lack `man` support and command completion._
+
+On BSD systems:
+
+```sh
+install 755 pb /usr/local/bin
+install 644 pb /usr/local/man/man1
+```
 
 ### Uninstall
 

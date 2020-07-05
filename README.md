@@ -1,4 +1,4 @@
-pb ![calver](https://img.shields.io/badge/calver-2020.06.10-22bfda.svg?style=flat-square) ![status](https://img.shields.io/badge/status-working-green.svg?style=flat-square) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
+pb ![calver](https://img.shields.io/badge/calver-2020.07.05-22bfda.svg?style=flat-square) ![status](https://img.shields.io/badge/status-working-green.svg?style=flat-square) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
 ------
 
 **pb** is a helper utility for using 0x0 pastebin services
@@ -54,21 +54,27 @@ pb -u https://google.com
 
 On GNU systems:
 
-`sudo make install`
-
-_Note: On systems without admin access the binary can be run directly from the
-git repo, but will lack `man` support and command completion._
+```sh
+sudo make install
+```
 
 On BSD systems:
 
 ```sh
-install 755 pb /usr/local/bin
-install 644 pb /usr/local/man/man1
+doas gmake install
 ```
 
 ### Uninstall
 
-`sudo make uninstall`
+```sh
+sudo make uninstall
+```
+
+On BSD systems:
+
+```sh
+doas gmake uninstall
+```
 
 ## Contributing
 

@@ -1,14 +1,13 @@
 #!/bin/sh
 
 # init variables
-version="v2020.06.10"
+version="v2020.07.05"
 ENDPOINT="https://ttm.sh"
-flag_options=":hvcufs::x"
+flag_options=":hvcufs::"
 flag_version=0
 flag_help=0
 flag_file=0
 flag_url=0
-flag_shortlist=0
 flag_colors=0
 data=""
 
@@ -93,9 +92,6 @@ while true; do
     -u)
       flag_url=1
       ;;
-    -x)
-      flag_shortlist=1
-      ;;
     --)
       shift
       break
@@ -123,14 +119,6 @@ if [ ${flag_help} -gt 0 ]; then
   show_help
   die "" 0
 fi
-
-# shortlist used for bash command completion
-if [ ${flag_shortlist} -gt 0 ]; then
-  out="-f -v -h -s -c -u"
-  lsresults="$(ls)"
-  die "${out} ${lsresults}" 0
-fi
-
 
 # Colors
 if [ ${flag_colors} -gt 0 ]; then

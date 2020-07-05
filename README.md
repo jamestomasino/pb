@@ -60,8 +60,10 @@ sudo make install
 
 On BSD systems:
 
+The man-path `/usr/local/share/man` is not indexed by default on openbsd. Using the `/usr` prefix works around this issue.
+
 ```sh
-doas gmake install
+doas make PREFIX=/usr install
 ```
 
 ### Uninstall
@@ -73,7 +75,7 @@ sudo make uninstall
 On BSD systems:
 
 ```sh
-doas gmake uninstall
+doas make PREFIX=/usr uninstall
 ```
 
 ## Contributing

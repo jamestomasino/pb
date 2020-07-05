@@ -1,42 +1,50 @@
-PREFIX ?= /usr/local
-BINDIR ?= $(PREFIX)/bin
-MANDIR ?= $(PREFIX)/share/man
+# Install to /usr/local unless otherwise specified, such as `make PREFIX=/app`
+PREFIX?=/usr/local
+
+# What to run to install various files
+INSTALL?=install
+# Run to install the actual binary
+INSTALL_PROGRAM=$(INSTALL) -Dm 755
+# Run to install application data, with differing permissions
+INSTALL_DATA=$(INSTALL) -Dm 644
+
+# Directories into which to install the various files
+bindir=$(DESTDIR)$(PREFIX)/bin
+sharedir=$(DESTDIR)$(PREFIX)/share
 
 # Attempt to find bash completion dir in order of preference
 ifneq ($(wildcard /etc/bash_completion.d/.),)
-  CPLDIR ?= /etc/bash_completion.d
+  cpldir ?= /etc/bash_completion.d
 endif
 
 HAS_BREW := $(shell command -v brew 2> /dev/null)
 ifdef HAS_BREW
-  CPLDIR ?= $$(brew --prefix)/etc/bash_completion.d
+  cpldir ?= $$(brew --prefix)/etc/bash_completion.d
 endif
 
 HAS_PKGCONFIG := $(shell command -v pkg-config 2> /dev/null)
 ifdef HAS_PKGCONFIG
-  CPLDIR ?= $$(pkg-config --variable=completionsdir bash-completion 2> /dev/null)
+  cpldir ?= $$(pkg-config --variable=completionsdir bash-completion 2> /dev/null)
 endif
 
-install:
-	@echo Installing the executable to $(BINDIR)
-	@install -D -m 0755 pb $(BINDIR)/pb
-	@echo Installing the manual page to $(MANDIR)/man1
-	@install -D -m 0644 pb.1 $(MANDIR)/man1/pb.1
-ifeq ($(CPLDIR),)
-	@echo Installing the command completion to $(CPLDIR)
-	@mkdir -p $(CPLDIR)
-	@cp -f pb.d $(CPLDIR)/pb
-	@chmod 644 $(CPLDIR)/pb
+help:
+	@echo "targets:"
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/  \1|\3/p' \
+	| column -t  -s '|'
+
+install: pb pb.1 ## system install
+	$(INSTALL_PROGRAM) pb $(bindir)/pb
+	$(INSTALL_DATA) pb.1 $(sharedir)/man/man1/pb.1
+ifdef cpldir
+	$(INSTALL_DATA) pb.d $(cpldir)/pb
 endif
 
-uninstall:
-	@echo Removing the executable from $(BINDIR)
-	@rm -f $(BINDIR)/pb
-	@echo Removing the manual page from $(MANDIR)/man1
-	@rm -f $(BINDIR)/man1/pb.1
-ifeq ($(CPLDIR),)
-	@echo Removing the command completion from $(CPLDIR)
-	@rm -f $(CPLDIR)/pb
+uninstall: ## system uninstall
+	rm -f $(bindir)/pb
+	rm -f $(sharedir)/man/man1/pb.1
+ifdef cpldir
+	rm -f $(cpldir)/pb
 endif
 
-.PHONY: install uninstall
+.PHONY: install uninstall help

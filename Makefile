@@ -14,15 +14,15 @@ sharedir=$(DESTDIR)$(PREFIX)/share
 
 help:
 	@echo "targets:"
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/  \1|\3/p' \
+	@awk -F '#' '/^[a-zA-Z0-9_-]+:.*?#/ { print $0 }' $(MAKEFILE_LIST) \
+	| sed -n 's/^\(.*\): \(.*\)#\(.*\)/  \1|-\3/p' \
 	| column -t  -s '|'
 
-install: pb pb.1 ## system install
+install: pb pb.1 # system install
 	$(INSTALL_PROGRAM) pb $(bindir)/pb
 	$(INSTALL_DATA) pb.1 $(sharedir)/man/man1/pb.1
 
-uninstall: ## system uninstall
+uninstall: # system uninstall
 	rm -f $(bindir)/pb
 	rm -f $(sharedir)/man/man1/pb.1
 

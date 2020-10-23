@@ -1,0 +1,9 @@
+---
+kind: pipeline
+name: shellcheck
+
+steps:
+    - name: shellcheck
+      image: koalaman/shellcheck-alpine:stable
+      commands:
+          - shellcheck pb

@@ -1,4 +1,4 @@
-pb ![calver](https://img.shields.io/badge/calver-2020.09.05-22bfda.svg?style=flat-square) ![status](https://img.shields.io/badge/status-working-green.svg?style=flat-square) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
+pb ![calver](https://img.shields.io/badge/calver-2020.09.05-22bfda.svg?style=flat-square) [![Build Status](https://drone.tildegit.org/api/badges/tomasino/pb/status.svg)](https://drone.tildegit.org/tomasino/pb) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
 ------
 
 **pb** is a helper utility for using 0x0 pastebin services

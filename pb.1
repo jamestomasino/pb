@@ -71,6 +71,10 @@ Upload a file to a different pastebin endpoint
 .TP
 .B pb -u 'https://tilde.team'
 Shorten the URL to tilde.team
+.TP
+.B curl -s https://some/image/file.png | pb -e "png"
+Download a binary file and re-upload it to the pastebin with an explicit binary
+type and extension.
 
 .SH BUGS
 Report issues at the git repository at

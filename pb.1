@@ -1,4 +1,4 @@
-.TH PB 1 "05 September 2020" "v2020.09.05"
+.TH PB 1 "27 October 2020" "v2020.10.27"
 
 .SH NAME
 pb \- a helper utility for using 0x0 pastebin services
@@ -27,6 +27,13 @@ Explicitly interpret stdin as filename or names.
 .TP
 .BI -s " server_address"
 Use alternative pastebin server address.
+.TP
+.BI -e " bin_extension"
+Specifes the file extension used in the upload of binary content passed to
+.B pb
+via standard input.
+.I Note:
+this attribute will not work with file uploads or URL shortening.
 .TP
 .B -u
 Shorten a URL.

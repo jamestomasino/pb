@@ -1,4 +1,4 @@
-pb ![calver](https://img.shields.io/badge/calver-2020.09.05-22bfda.svg?style=flat-square) [![Build Status](https://drone.tildegit.org/api/badges/tomasino/pb/status.svg)](https://drone.tildegit.org/tomasino/pb) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
+pb ![calver](https://img.shields.io/badge/calver-2020.10.27-22bfda.svg?style=flat-square) [![Build Status](https://drone.tildegit.org/api/badges/tomasino/pb/status.svg)](https://drone.tildegit.org/tomasino/pb) ![license](https://img.shields.io/badge/license-GPL3-blue.svg?style=flat-square)
 ------
 
 **pb** is a helper utility for using 0x0 pastebin services
@@ -39,6 +39,12 @@ Shorten a URL
 pb -u https://google.com
 ```
 
+Re-upload an image from the web
+
+```bash
+curl -s https://tildegit.org/_/static/img/gitea-lg.png | pb -e "png"
+```
+
 ### Options
 
 ```bash
@@ -48,6 +54,7 @@ pb -u https://google.com
   -c                        Pretty color output
   -u                        Shorten URL
   -s server_address         Use alternative pastebin server address
+  -e bin_extension          Specify a binary file extension used in the upload
 ```
 
 ### Install

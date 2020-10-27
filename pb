@@ -1,15 +1,17 @@
 #!/bin/sh
 
 # init variables
-version="v2020.07.05"
+version="v2020.10.27"
 ENDPOINT="https://ttm.sh"
-flag_options=":hvcufs::"
+flag_options=":hvcufe:s::"
 flag_version=0
 flag_help=0
 flag_file=0
 flag_url=0
 flag_colors=0
+flag_ext=0
 data=""
+EXT=""
 
 # help message available via func
 show_help() {
@@ -27,6 +29,7 @@ OPTIONAL FLAGS:
   -c                        Pretty color output
   -u                        Shorten URL
   -s server_address         Use alternative pastebin server address
+  -e bin_extension          Specify a binary file extension used in the upload
 END
 }
 
@@ -55,13 +58,6 @@ die () {
   exit "${code}"
 }
 
-# is not interactive shell, use stdin
-if [ -t 0 ]; then
-  flag_file=1
-else
-  data="$(cat < /dev/stdin )"
-fi
-
 # attempt to parse options or die
 if ! parsed=$(getopt ${flag_options} "$@"); then
   printf "pb: unknown option\\n"
@@ -85,6 +81,11 @@ while true; do
     -f)
       flag_file=1
       ;;
+    -e)
+      shift
+      flag_ext=1
+      EXT="$1"
+      ;;
     -s)
       shift
       ENDPOINT="$1"
@@ -103,11 +104,6 @@ while true; do
   shift
 done
 
-# if data variable is empty (not a pipe) use params as fallback
-if [ -z "$data" ]; then
-  data="$*"
-fi
-
 # display current version
 if [ ${flag_version} -gt 0 ]; then
   printf "%s\\n" "${version}"
@@ -118,6 +114,24 @@ fi
 if [ ${flag_help} -gt 0 ]; then
   show_help
   die "" 0
+fi
+
+# is not interactive shell, use stdin
+if [ -t 0 ]; then
+  flag_file=1
+else
+  if [ ${flag_ext} -gt 0 ]; then
+    # short-circuit stdin access to ensure binary data is transferred to curl
+    curl -sF"file=@-;filename=null.${EXT}" "${ENDPOINT}" < /dev/stdin
+    exit 0
+  else
+    data="$(cat < /dev/stdin )"
+  fi
+fi
+
+# if data variable is empty (not a pipe) use params as fallback
+if [ -z "$data" ]; then
+  data="$*"
 fi
 
 # Colors
@@ -167,8 +181,13 @@ if [ ${flag_file} -gt 0 ]; then
       fi
       # check if file exists
       if [ -f "${f}" ]; then
-        # send file to endpoint
-        result=$(curl -sF"file=@${f}" "${ENDPOINT}")
+        if [ ${flag_ext} -gt 0 ]; then
+          # send file to endpoint masked with new extension
+          result=$(curl -sF"file=@${f};filename=null.${EXT}" "${ENDPOINT}")
+        else
+          # send file to endpoint
+          result=$(curl -sF"file=@${f}" "${ENDPOINT}")
+        fi
         printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
       else
         # print error message
@@ -189,7 +208,7 @@ else
     printf "%sNo data found for upload. Please try again.%s\\n" "$ERROR" "$RESET"
   else
     # data available
-    # send data to endpoint, print short url
+    # send data to endpoint
     result=$(printf "%s" "${data}" | curl -sF"file=@-;filename=null.txt" "${ENDPOINT}")
     printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
   fi

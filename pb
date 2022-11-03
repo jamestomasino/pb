@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # init variables
-version="v2020.10.27"
+version="v2022.11.03"
 ENDPOINT="https://ttm.sh"
-flag_options=":hvcufe:s::"
+flag_options=":hvcfe:s:"
+long_flag_options="help,version,color,file,extension:,server:"
 flag_version=0
 flag_help=0
 flag_file=0
-flag_url=0
 flag_colors=0
 flag_ext=0
 data=""
@@ -23,13 +23,12 @@ or
 Uploads a file or data to the tilde 0x0 paste bin
 
 OPTIONAL FLAGS:
-  -h                        Show this help
-  -v                        Show current version number
-  -f                        Explicitly interpret stdin as filename
-  -c                        Pretty color output
-  -u                        Shorten URL
-  -s server_address         Use alternative pastebin server address
-  -e bin_extension          Specify a binary file extension used in the upload
+  -h | --help)                    Show this help
+  -v | --version)                 Show current version number
+  -f | --file)                    Explicitly interpret stdin as filename
+  -c | --color)                   Pretty color output
+  -s | --server server_address)   Use alternative pastebin server address
+  -e | --extension bin_extension) Specify file extension used in the upload
 END
 }
 
@@ -59,49 +58,27 @@ die () {
 }
 
 # attempt to parse options or die
-if ! parsed=$(getopt ${flag_options} "$@"); then
+if ! PARSED_ARGUMENTS=$(getopt -a -n pb -o ${flag_options} --long ${long_flag_options} -- "$@"); then
   printf "pb: unknown option\\n"
   show_usage
   exit 2
 fi
 
-# handle options
-eval set -- "${parsed}"
-while true; do
+# For debugging: echo "PARSED_ARGUMENTS is $PARSED_ARGUMENTS"
+eval set -- "$PARSED_ARGUMENTS"
+while :
+do
   case "$1" in
-    -h|?)
-      flag_help=1
-      ;;
-    -v)
-      flag_version=1
-      ;;
-    -c)
-      flag_colors=1
-      ;;
-    -f)
-      flag_file=1
-      ;;
-    -e)
-      shift
-      flag_ext=1
-      EXT="$1"
-      ;;
-    -s)
-      shift
-      ENDPOINT="$1"
-      ;;
-    -u)
-      flag_url=1
-      ;;
-    --)
-      shift
-      break
-      ;;
-    *)
-      die "Internal error: $1" 3
-      ;;
+    -h | --help)      flag_help=1                  ; shift   ;;
+    -v | --version)   flag_version=1               ; shift   ;;
+    -c | --color)     flag_color=1                 ; shift   ;;
+    -f | --file)      flag_file=1                  ; shift   ;;
+    -e | --extension) flag_ext=1;    EXT="$2"      ; shift 2 ;;
+    -s | --server)                   ENDPOINT="$2" ; shift 2 ;;
+    --) shift; break ;;
+    *) echo "Unexpected option: $1 - this should not happen."
+       show_usage ; die 3 ;;
   esac
-  shift
 done
 
 # display current version
@@ -143,24 +120,6 @@ else
   SUCCESS=""
   ERROR=""
   RESET=""
-fi
-
-# URL shortening reference
-
-# If URL mode detected, process URL shortener and end processing without
-# checking for a file to upload to the pastebin
-if [ ${flag_url} -gt 0 ]; then
-
-  if [ -z "${data}" ]; then
-    # if no data
-    # print error message
-    printf "%sProvide URL to shorten%s\\n" "$ERROR" "$RESET"
-  else
-    # shorten URL and print results
-    result=$(curl -sF"shorten=${data}" "${ENDPOINT}")
-    printf "%s%s%s\\n" "$SUCCESS" "$result" "$RESET"
-  fi
-  die "" 0
 fi
 
 if [ ${flag_file} -gt 0 ]; then

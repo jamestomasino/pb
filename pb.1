@@ -1,4 +1,4 @@
-.TH PB 1 "27 October 2020" "v2020.10.27"
+.TH PB 1 "03 November 2022" "v2022.11.03"
 
 .SH NAME
 pb \- a helper utility for using 0x0 pastebin services
@@ -16,8 +16,8 @@ comes pre-configured with a specific pastebin, the
 service endpoint can be overridden.
 
 Data input can be provided as an argument or via stdin.
-The data will be processed as an image, text or URL to
-be shortened based on the context.
+The data will be processed as binary or text
+based on the context.
 
 The options are as follows:
 
@@ -32,11 +32,6 @@ Use alternative pastebin server address.
 Specifes the file extension used in the upload of binary content passed to
 .B pb
 via standard input.
-.I Note:
-this attribute will not work with file uploads or URL shortening.
-.TP
-.B -u
-Shorten a URL.
 .TP
 .B -c
 Pretty color output.
@@ -68,9 +63,6 @@ Upload a list of files to the pastebin individually
 .TP
 .B pb -s http://0x0.st scores.txt
 Upload a file to a different pastebin endpoint
-.TP
-.B pb -u 'https://tilde.team'
-Shorten the URL to tilde.team
 .TP
 .B curl -s https://some/image/file.png | pb -e "png"
 Download a binary file and re-upload it to the pastebin with an explicit binary

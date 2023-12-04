@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # init variables
-version="v2022.11.03"
-ENDPOINT="https://ttm.sh"
+version="v2023.12.04"
+ENDPOINT="https://envs.sh"
 flag_options=":hvcfe:s:"
 long_flag_options="help,version,color,file,extension:,server:"
 flag_version=0
